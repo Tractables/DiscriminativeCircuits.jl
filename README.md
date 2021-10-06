@@ -1,5 +1,7 @@
 <img align="right" width="180px" src="https://avatars.githubusercontent.com/u/58918144?s=200&v=4">
 
+[![Unit Tests](https://github.com/Juice-jl/DiscriminativeCircuits.jl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Juice-jl/DiscriminativeCircuits.jl/actions/workflows/ci.yml)
+
 <!-- DO NOT EDIT README.md directly, instead edit docs/README.jl and generate the markdown-->
 
 # Under Construction
