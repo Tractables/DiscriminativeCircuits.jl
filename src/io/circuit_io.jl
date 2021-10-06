@@ -1,29 +1,29 @@
-export zoo_lc_file, zoo_discriminative, zoo_dc
+export zoo_dc_file, zoo_discriminative, zoo_dc
 
 struct  DiscriminativeFormat <: FileFormat end
 
 const DiscriminativeVtreeFormat = Tuple{DiscriminativeFormat, VtreeFormat}
 Tuple{DiscriminativeVtreeFormat,VtreeFormat}() = (DiscriminativeFormat(), VtreeFormat())
 
-zoo_lc_file(name) = 
+zoo_dc_file(name) = 
     artifact"circuit_model_zoo" * zoo_version * "/lcs/$name"
 
 
 """
-    zoo_discriminative(name)
+    zoo_dc(name)
 
 Loads a discriminative circuit (logistic circuit or regression circuit) from the model zoo.
 See https://github.com/UCLA-StarAI/Circuit-Model-Zoo.    
 """
-zoo_discriminative(name) = 
-    read(zoo_lc_file(name), DiscriminativeCircuit, DiscriminativeFormat())
+zoo_dc(name) = 
+    read(zoo_dc_file(name), DiscriminativeCircuit, DiscriminativeFormat())
 
-const zoo_dc = zoo_discriminative
+const zoo_discriminative = zoo_dc
 
 const discriminative_grammer = raw"""
     start: _header (_NL node)+ _NL?
 
-    _header : "Logisitic" _WS "Circuit" | "Regression" _WS "Circuit" 
+    _header : "Logisitic" _WS "Circuit" | "Logistic" _WS "Circuit" | "Regression" _WS "Circuit" 
 
     node: "T" _WS INT _WS INT _WS INT _WS params -> true_node
       | "F" _WS INT _WS INT _WS INT _WS params -> false_node
@@ -135,7 +135,8 @@ c	F (terminal nodes that correspond to false literals)
 c	D (OR gates)
 c
 c file syntax:
-c Regression Circuit
+c
+c Logistic Circuit | Regression Circuit
 c T id-of-true-literal-node id-of-vtree variable parameters
 c F id-of-false-literal-node id-of-vtree variable parameters
 c D id-of-or-gate id-of-vtree number-of-elements (id-of-prime id-of-sub parameters)s
@@ -158,8 +159,9 @@ function Base.write(io::IO, pc::DiscriminativeCircuit, ::DiscriminativeFormat, v
         elseif is⋁gate(node) && length(node.children) == 1 && isliteralgate(node.children[1])
             cc = node.children[1]
             t = ispositive(cc) ? "T" : "F"
+            plit = ispositive(cc) ? literal(node.children[1]) : -literal(node.children[1])
     
-            print(io, "$(t) $(labeling[node]) $(vtree2id(node)) $(literal(node.children[1])) ")
+            print(io, "$(t) $(labeling[node]) $(vtree2id(node)) $(plit) ")
             for p in node.thetas[1, :]
                 print(io, " $p")
             end
@@ -178,7 +180,7 @@ function Base.write(io::IO, pc::DiscriminativeCircuit, ::DiscriminativeFormat, v
             else
                 print(io, "D $(labeling[node]) $(vtree2id(node)) $(length(node.children))") 
                 for (id, child) in enumerate(node.children)
-                    print(io, " ($(labeling[child.children[1]]) $(labeling[child.children[1]])")
+                    print(io, " ($(labeling[child.children[1]]) $(labeling[child.children[2]])")
                     for p in node.thetas[id, :]
                         print(io, " $p")
                     end

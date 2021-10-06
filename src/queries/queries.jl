@@ -1,4 +1,4 @@
-export class_likelihood_per_instance, class_weights_per_instance
+export class_likelihood_per_instance, class_weights_per_instance, predict_class, accuracy
 
 using CUDA
 using LoopVectorization: @avx
@@ -139,11 +139,14 @@ end
 """
 Prediction accuracy
 """
-accuracy(lc::LogisticCircuit, nc::Int, data, labels::Vector) = 
+function accuracy(lc::LogisticCircuit, nc::Int, data, labels::Vector)
     accuracy(predict_class(lc, nc, data), labels)
+end
 
-accuracy(predicted_class::Vector, labels::Vector) = 
+function accuracy(predicted_class::Vector, labels::Vector) 
     Float64(sum(@. predicted_class == labels)) / length(labels)
+end
 
-accuracy(class_likelihoods::Matrix, labels::Vector) = 
+function accuracy(class_likelihoods::Matrix, labels::Vector) 
     accuracy(predict_class(class_likelihoods), labels)
+end

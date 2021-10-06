@@ -1,7 +1,12 @@
 export ParamBitCircuit
 
-import LogicCircuits: num_nodes, num_elements, num_features, num_leafs, nodes, elements
+import LogicCircuits: num_nodes, num_elements, num_features, num_leafs, nodes, elements, num_examples, isbinarydata, iscomplete
 import ProbabilisticCircuits: ParamBitCircuit, to_gpu, to_cpu, isgpu #extend
+
+@inline num_features(x::BitMatrix) = size(x)[2]
+@inline num_examples(x::BitMatrix) = size(x)[1]
+@inline isbinarydata(x::BitMatrix) = true
+@inline iscomplete(x::BitMatrix) = true
 
 function ParamBitCircuit(lc::LogisticCircuit, nc, data)
     thetas::Vector{Vector{Float32}} = Vector{Vector{Float32}}()

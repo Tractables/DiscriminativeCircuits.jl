@@ -1,8 +1,9 @@
 using Test
 using LogicCircuits
 using ProbabilisticCircuits
+using DiscriminativeCircuits
 
-include("helper/plain_logic_circuits.jl")
+include("../helper/little_circuits.jl")
 
 @testset "probabilistic circuit nodes" begin
 

@@ -2,7 +2,8 @@ export
     LogisticCircuit,
     LogisticLeafNode, LogisticInnerNode, 
     LogisticLiteralNode, Logistic⋀Node, Logistic⋁Node,
-    num_classes, num_parameters_per_class
+    num_classes, 
+    num_parameters_per_class
     
 #####################
 # Infrastructure for logistic circuit nodes
@@ -66,7 +67,9 @@ import LogicCircuits: children # make available for extension
 @inline children(n::LogisticInnerNode) = n.children
 @inline num_classes(n::Logistic⋁Node) = size(n.thetas)[2]
 
+import ProbabilisticCircuits: num_parameters # extension
 @inline num_parameters(c::LogisticCircuit) = sum(n -> num_children(n) * num_classes(n), ⋁_nodes(c))
+
 @inline num_parameters_per_class(c::LogisticCircuit) = sum(n -> num_children(n), ⋁_nodes(c))
 
 "Get the parameters associated with a or node"

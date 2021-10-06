@@ -52,7 +52,7 @@ function update_parameters_cpu(bc, data, labels, cl, step_size)
                 @inbounds edge_flow = values[i, prime] * values[i, sub] / values[i, grandpa] * flows[i, grandpa]
                 edge_flow = ifelse(isfinite(edge_flow), edge_flow, zero(eltype(flows)))
                 for class = 1:nc
-                    @inbounds bc.parames[element, class] -= (cl[i, class] - labels[i, class]) * edge_flow * step_size
+                    @inbounds bc.params[element, class] -= (cl[i, class] - labels[i, class]) * edge_flow * step_size
                 end
             end
         end

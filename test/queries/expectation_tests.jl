@@ -1,6 +1,7 @@
 using Test
 using LogicCircuits
 using ProbabilisticCircuits
+using DiscriminativeCircuits
 using DataFrames
 using CUDA
 using Random
@@ -103,7 +104,7 @@ end
     N = 4
 
     pc = zoo_psdd(psdd_file);
-    lc = zoo_lc(logistic_file, CLASSES);
+    lc = zoo_dc(logistic_file)
     data = DataFrame([0 0 0 0; 
             0 1 1 0; 
             0 0 1 1;
@@ -128,7 +129,7 @@ end
     COUNT = 10
 
     pc = zoo_psdd(psdd_file);
-    lc = zoo_lc(logistic_file, CLASSES);
+    lc = zoo_dc(logistic_file)
     data = DataFrame(rand( (missing,true,false), (COUNT, N) ), :auto)
     
     test_expectation_brute_force(pc, lc, data, CLASSES)
@@ -144,7 +145,7 @@ end
     COUNT = 100
 
     pc = zoo_psdd(psdd_file);
-    lc = zoo_lc(logistic_file, CLASSES);
+    lc = zoo_dc(logistic_file) 
     data = DataFrame(rand( (missing,true,false), (COUNT, N) ), :auto)
 
     test_moment_brute_force(pc, lc, data, CLASSES, 1)
@@ -162,7 +163,7 @@ end
     COUNT = 10
 
     pc = zoo_psdd(psdd_file);
-    lc = zoo_lc(logistic_file, CLASSES);
+    lc = zoo_dc(logistic_file) 
     data = DataFrame(rand( (missing,true,false), (COUNT, N) ), :auto)
 
     test_moment_brute_force(pc, lc, data, CLASSES, 1)

@@ -2,6 +2,8 @@ using CUDA: CUDA, @cuda
 using DataFrames: DataFrame
 using LoopVectorization: @avx
 
+import ProbabilisticCircuits: balance_threads
+
 export ExpectationBit
 
 

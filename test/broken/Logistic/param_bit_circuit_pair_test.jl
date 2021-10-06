@@ -46,7 +46,7 @@ end
     end
 
     pc = zoo_psdd("exp-D15-N1000-C4.psdd");
-    lc = zoo_lc("exp-D15-N1000-C4.circuit", 4);
+    lc = zoo_dc("exp-D15-N1000-C4.circuit")
 
     test_integrity(ParamBitCircuitPair(pc, children(lc)[1]));
 
