@@ -1,6 +1,6 @@
 <img align="right" width="180px" src="https://avatars.githubusercontent.com/u/58918144?s=200&v=4">
 
-[![Unit Tests](https://github.com/Juice-jl/DiscriminativeCircuits.jl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Juice-jl/DiscriminativeCircuits.jl/actions/workflows/ci.yml)
+[![Unit Tests](https://github.com/Juice-jl/DiscriminativeCircuits.jl/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/Juice-jl/DiscriminativeCircuits.jl/actions/workflows/ci.yml) [![codecov](https://codecov.io/gh/Juice-jl/DiscriminativeCircuits.jl/branch/master/graph/badge.svg?token=7OA50HIPU7)](https://codecov.io/gh/Juice-jl/DiscriminativeCircuits.jl)
 
 <!-- DO NOT EDIT README.md directly, instead edit docs/README.jl and generate the markdown-->
 
