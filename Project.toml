@@ -1,6 +1,6 @@
 name = "DiscriminativeCircuits"
 uuid = "a7647aa2-9cec-401b-a794-defb9118933d"
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 CUDA = "052768ef-5323-5732-b1bb-66c8b64840ba"
