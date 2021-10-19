@@ -7,8 +7,8 @@ using LoopVectorization: @avx
 """
 Class Conditional Probability
 """
-function class_likelihood_per_instance(lc::LogisticCircuit, nc::Int, data)    
-    cw = class_weights_per_instance(lc, nc, data)
+function class_likelihood_per_instance(lc::LogisticCircuit, data)    
+    cw = class_weights_per_instance(lc, data)
     one = Float32(1.0)
     isgpu(data) ? (@. one / (one + exp(-cw))) : (@. @avx one / (one + exp(-cw)))
 end
@@ -19,7 +19,8 @@ function class_likelihood_per_instance(bc, data)
     isgpu(data) ? (@. one / (one + exp(-cw))) : (@. @avx one / (one + exp(-cw)))
 end
 
-function class_weights_per_instance(lc::LogisticCircuit, nc::Int, data)
+function class_weights_per_instance(lc::LogisticCircuit, data)
+    nc = num_classes(lc)
     bc = ParamBitCircuit(lc, nc, data)
     class_weights_per_instance(bc, data)
 end
@@ -124,8 +125,8 @@ end
 """
 Class Predictions
 """
-function predict_class(lc::LogisticCircuit, nc::Int, data)
-    class_likelihoods = class_likelihood_per_instance(lc, nc, data)
+function predict_class(lc::LogisticCircuit, data)
+    class_likelihoods = class_likelihood_per_instance(lc, data)
     predict_class(class_likelihoods)
 end
 
@@ -139,8 +140,8 @@ end
 """
 Prediction accuracy
 """
-function accuracy(lc::LogisticCircuit, nc::Int, data, labels::Vector)
-    accuracy(predict_class(lc, nc, data), labels)
+function accuracy(lc::LogisticCircuit, data, labels::Vector)
+    accuracy(predict_class(lc, data), labels)
 end
 
 function accuracy(predicted_class::Vector, labels::Vector) 

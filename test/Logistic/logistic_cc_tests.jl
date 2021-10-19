@@ -24,7 +24,7 @@ using DataFrames: DataFrame
     true_prob 
             
     CLASSES = 2
-    calc_prob = class_weights_per_instance(logistic_circuit, CLASSES, data)
+    calc_prob = class_weights_per_instance(logistic_circuit, data)
     
     for i = 1:3
         for j = 1:2

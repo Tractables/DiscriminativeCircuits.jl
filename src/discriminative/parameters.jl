@@ -6,7 +6,8 @@ using CUDA
 LogisticCircuit Parameter learning through gradient descents
 Note: data need to be DataFrame and Labels need to be in one-hot form.
 """
-function learn_parameters(lc::LogisticCircuit, nc::Int, data, labels; num_epochs=25, step_size=0.01)
+function learn_parameters(lc::LogisticCircuit, data, labels; num_epochs=25, step_size=0.01)
+    nc = num_classes(lc)
     bc = ParamBitCircuit(lc, nc, data)
     if isgpu(data)
         @assert isgpu(labels) "Data and labels must be both stored in either GPU or CPU."

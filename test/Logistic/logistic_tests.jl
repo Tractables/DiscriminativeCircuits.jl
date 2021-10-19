@@ -24,7 +24,7 @@ using DataFrames: DataFrame
                  0.9862917392724188 0.9445399509069984; 
                  0.9752568185086389 0.9928816444223209]
             
-    class_prob = class_likelihood_per_instance(logistic_circuit, CLASSES, data)
+    class_prob = class_likelihood_per_instance(logistic_circuit, data)
     for i = 1:size(true_prob)[1]
         for j = 1:CLASSES
             @test true_prob[i,j] ≈ class_prob[i,j]
@@ -33,7 +33,7 @@ using DataFrames: DataFrame
 
     # check probabilities for float samples
     data = DataFrame(Float32.(data_raw), :auto)
-    class_prob = class_likelihood_per_instance(logistic_circuit, CLASSES, data)
+    class_prob = class_likelihood_per_instance(logistic_circuit, data)
     for i = 1:size(true_prob)[1]
         for j = 1:CLASSES
             @test true_prob[i,j] ≈ class_prob[i,j]
@@ -42,11 +42,11 @@ using DataFrames: DataFrame
 
     # check predicted_classes
     true_labels = [2, 1, 2]
-    predicted_classes = predict_class(logistic_circuit, CLASSES, data)
+    predicted_classes = predict_class(logistic_circuit, data)
     @test all(predicted_classes .== true_labels)
     
     # check accuracy
-    @test accuracy(logistic_circuit, CLASSES, data, true_labels) == 1.0
+    @test accuracy(logistic_circuit, data, true_labels) == 1.0
 
     # check parameter updates
     original_literal_parameters = Dict{Int, Vector{Float64}}()
@@ -65,13 +65,13 @@ using DataFrames: DataFrame
     ###TODO learn_parameters errors when calling Pkg.test but not when running runtests.jl directly
     ### error is  BoundsError: attempt to access 3-element Vector{Int64} at index [1, 2]
     ######
-    # one_hot_labels = [0.0 1.0;
-    #                   1.0 0.0;
-    #                   0.0 1.0]
-    # one_hot_labels = Float32.(one_hot_labels)
-    # true_error = true_prob .- one_hot_labels
-    # step_size = 0.1
-    # learn_parameters(logistic_circuit, CLASSES, data, true_labels; num_epochs=1, step_size=step_size)
+    one_hot_labels = [0.0 1.0;
+                      1.0 0.0;
+                      0.0 1.0]
+    one_hot_labels = Float32.(one_hot_labels)
+    true_error = true_prob .- one_hot_labels
+    step_size = 0.1
+    learn_parameters(logistic_circuit, data, true_labels; num_epochs=1, step_size=step_size)
     
 
     #####
