@@ -10,5 +10,7 @@
 *.vscode
 **checkpoint.ipynb
 *Manifest.toml
+Manifest.toml
+test/Manifest.toml
 docs/build/
 scratch/
