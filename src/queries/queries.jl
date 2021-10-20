@@ -13,7 +13,7 @@ function class_likelihood_per_instance(lc::LogisticCircuit, data)
     isgpu(data) ? (@. one / (one + exp(-cw))) : (@. @avx one / (one + exp(-cw)))
 end
 
-function class_likelihood_per_instance(bc, data)
+function class_likelihood_per_instance(bc::ParamBitCircuit, data)
     cw = class_weights_per_instance(bc, data)
     one = Float32(1.0)
     isgpu(data) ? (@. one / (one + exp(-cw))) : (@. @avx one / (one + exp(-cw)))
@@ -21,11 +21,11 @@ end
 
 function class_weights_per_instance(lc::LogisticCircuit, data)
     nc = num_classes(lc)
-    bc = ParamBitCircuit(lc, nc, data)
+    bc = ParamBitCircuit(lc, data)
     class_weights_per_instance(bc, data)
 end
 
-function class_weights_per_instance(bc, data)
+function class_weights_per_instance(bc::ParamBitCircuit, data)
     if isgpu(data)
         class_weights_per_instance_gpu(to_gpu(bc), data)
     else
@@ -33,7 +33,7 @@ function class_weights_per_instance(bc, data)
     end
 end
 
-function class_weights_per_instance_cpu(bc, data)
+function class_weights_per_instance_cpu(bc::ParamBitCircuit, data)
     ne::Int = num_examples(data)
     nc::Int = size(bc.params, 2)
     cw::Matrix{Float32} = zeros(Float32, ne, nc)
@@ -80,7 +80,7 @@ function class_weights_per_instance_cpu(bc, data)
     return cw
 end
 
-function class_weights_per_instance_gpu(bc, data)
+function class_weights_per_instance_gpu(bc::ParamBitCircuit, data)
     ne::Int = num_examples(data)
     nc::Int = size(bc.params, 2)
     cw::CuMatrix{Float32} = CUDA.zeros(Float32, num_examples(data), nc)
@@ -125,7 +125,7 @@ end
 """
 Class Predictions
 """
-function predict_class(lc::LogisticCircuit, data)
+function predict_class(lc, data)
     class_likelihoods = class_likelihood_per_instance(lc, data)
     predict_class(class_likelihoods)
 end

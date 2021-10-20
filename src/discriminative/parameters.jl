@@ -6,20 +6,51 @@ using CUDA
 LogisticCircuit Parameter learning through gradient descents
 Note: data need to be DataFrame and Labels need to be in one-hot form.
 """
-function learn_parameters(lc::LogisticCircuit, data, labels; num_epochs=25, step_size=0.01)
-    nc = num_classes(lc)
-    bc = ParamBitCircuit(lc, nc, data)
+function learn_parameters(circuit, data, labels; 
+    num_epochs=25, 
+    step_size=0.01,
+    verbose=false,
+    log_freq=10)
+
+    if typeof(circuit) <: LogisticCircuit
+        learn_parameters_lc(circuit, data, labels; 
+                                num_epochs, step_size, verbose, log_freq)
+    elseif typeof(circuit) <: ParamBitCircuit
+        learn_parameters_pbc(circuit, data, labels; 
+            num_epochs, step_size, verbose, log_freq)
+    else
+        @error "Invalid circuit type $(typeof(circuit))."
+    end
+
+end
+
+function learn_parameters_lc(lc::LogisticCircuit, data, labels; 
+    num_epochs, step_size, verbose, log_freq) 
+
+    pbc = ParamBitCircuit(lc, data)
+    learn_parameters_pbc(pbc, data, labels; 
+                            num_epochs, step_size, verbose, log_freq)
+end
+
+function learn_parameters_pbc(pbc::ParamBitCircuit, data, labels; 
+    num_epochs, step_size, verbose, log_freq)
+
+    cl = class_likelihood_per_instance(pbc, data)
     if isgpu(data)
         @assert isgpu(labels) "Data and labels must be both stored in either GPU or CPU."
-        for _ = 1:num_epochs
-            cl = class_likelihood_per_instance(bc, data)
-            update_parameters_gpu(to_gpu(bc), data, labels, cl, step_size)
+        for iter = 1:num_epochs
+            if verbose && (iter % log_freq == 0)
+                println("Paramter Learning iter $(iter)/$(num_epochs)")
+            end
+            cl = class_likelihood_per_instance(pbc, data)
         end
     else
         @assert !isgpu(labels) "Data and labels must be both stored in either GPU or CPU."
-        for _ = 1:num_epochs
-            cl = class_likelihood_per_instance(bc, data)
-            update_parameters_cpu(bc, data, labels, cl, step_size)
+        for iter = 1:num_epochs
+            if verbose && (iter % log_freq == 0)
+                println("Paramter Learning iter $(iter)/$(num_epochs)")
+            end
+            update_parameters_cpu(pbc, data, labels, cl, step_size)
         end
     end
 end

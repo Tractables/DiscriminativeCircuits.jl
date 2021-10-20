@@ -1,6 +1,8 @@
 export ParamBitCircuit
 
-import LogicCircuits: num_nodes, num_elements, num_features, num_leafs, nodes, elements, num_examples, isbinarydata, iscomplete
+import LogicCircuits: num_nodes, num_elements, num_features, num_leafs, 
+    nodes, elements, num_examples, isbinarydata, iscomplete
+
 import ProbabilisticCircuits: ParamBitCircuit, to_gpu, to_cpu, isgpu #extend
 
 @inline num_features(x::BitMatrix) = size(x)[2]
@@ -8,7 +10,10 @@ import ProbabilisticCircuits: ParamBitCircuit, to_gpu, to_cpu, isgpu #extend
 @inline isbinarydata(x::BitMatrix) = true
 @inline iscomplete(x::BitMatrix) = true
 
-function ParamBitCircuit(lc::LogisticCircuit, nc, data)
+@inline num_classes(pbc::ParamBitCircuit, ::Type{LogisticCircuit}) = size(pbc.params)[2]
+
+function ParamBitCircuit(lc::LogisticCircuit, data)
+    nc = num_classes(lc)
     thetas::Vector{Vector{Float32}} = Vector{Vector{Float32}}()
     on_decision(n, cs, layer_id, decision_id, first_element, last_element) = begin
         if isnothing(n)

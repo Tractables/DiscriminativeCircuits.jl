@@ -3,6 +3,7 @@ using LogicCircuits
 using ProbabilisticCircuits
 using DiscriminativeCircuits
 using DataFrames: DataFrame
+using CUDA
 
 # This tests are supposed to test queries on the circuits
 @testset "Logistic Circuit Query and Parameter Tests" begin
@@ -60,11 +61,6 @@ using DataFrames: DataFrame
         end
     end
     
-
-    ##########
-    ###TODO learn_parameters errors when calling Pkg.test but not when running runtests.jl directly
-    ### error is  BoundsError: attempt to access 3-element Vector{Int64} at index [1, 2]
-    ######
     one_hot_labels = [0.0 1.0;
                       1.0 0.0;
                       0.0 1.0]
@@ -72,7 +68,12 @@ using DataFrames: DataFrame
     true_error = true_prob .- one_hot_labels
     step_size = 0.1
     learn_parameters(logistic_circuit, data, true_labels; num_epochs=1, step_size=step_size)
-    
+
+    if CUDA.functional()
+        data_gpu = to_gpu(data)
+        labels_gpu = to_gpu(true_labels)
+        learn_parameters(logistic_circuit, data_gpu, labels_gpu; num_epochs=1, step_size=step_size)
+    end
 
     #####
     ### TODO; not valid code anymore `c.data`, not exactly sure what this was doing but seems was when we had upflow circuits
