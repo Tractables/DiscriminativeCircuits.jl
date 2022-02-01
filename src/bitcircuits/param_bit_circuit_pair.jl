@@ -87,8 +87,8 @@ function ParamBitCircuitPair(pc::ProbCircuit, lc::LogisticCircuit; Float=Float32
 
     sizehint!(pc_thetas, num_edges(pc))
 
-    pc_cache = Dict{Node, NodeId}() # only for sum nodes
-    lc_cache = Dict{Node, NodeId}() # only for sum nodes
+    pc_cache = Dict{DAG, NodeId}() # only for sum nodes
+    lc_cache = Dict{DAG, NodeId}() # only for sum nodes
 
     lc_num_classes = num_classes(lc);
     pc_on_decision(n, cs, layer_id, decision_id, first_element, last_element) = begin
@@ -144,7 +144,7 @@ function BitCircuitPair(pc::ProbCircuit, lc::LogisticCircuit;
     last_dec_id::NodePairId = num_leafs
     last_el_id::NodePairId = zero(NodePairId)
 
-    cache = Dict{Pair{Node, Node}, NodePairIds}()
+    cache = Dict{Pair{DAG, DAG}, NodePairIds}()
 
     func(n,m) = begin
         throw("Unsupported pair of nodes!! $n, $m")
