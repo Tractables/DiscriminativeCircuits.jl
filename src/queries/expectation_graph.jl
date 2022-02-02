@@ -57,7 +57,7 @@ function ExpFlowCircuit(pc::ProbCircuit, lc::LogisticCircuit, batch_size::Int, :
     root_pc = pc
     root_lc = children(lc)[1]
     
-    cache = Dict{Pair{DAG, Node}, ExpFlowNode}()
+    cache = Dict{Pair{DAG, DAG}, ExpFlowNode}()
     sizehint!(cache, (num_nodes(pc) + num_nodes(lc))*10)
     expFlowCircuit = Vector{ExpFlowNode}()
 
